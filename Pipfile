@@ -1,0 +1,21 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+scrapy = "*"
+django = "*"
+scrapy-splash = "*"
+psycopg2-binary = "*"
+djangorestframework = "*"
+celery = "*"
+django-celery-beat = "*"
+django-redis = "*"
+isort = "*"
+scrapy-redis = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.9"

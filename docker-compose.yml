@@ -1,0 +1,49 @@
+version: '3.7'
+
+services:
+  db:
+    image: postgres:12-alpine
+    ports:
+      - 5434:5432
+    env_file:
+      .env
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data/
+
+  app:
+    build: .
+    command: bash -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - .:/app
+    ports:
+      - 8000:8000
+    depends_on:
+      - db
+      - splash
+    env_file:
+      - .env
+
+  splash:
+    image: scrapinghub/splash
+    ports:
+      - 8050:8050
+
+  redis:
+    image: redis
+    hostname: redis
+    ports:
+      - 6379:6379
+
+  celery:
+    build: .
+    command: celery -A djscrapy worker -B -l INFO
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+    links:
+      - redis
+    depends_on:
+      - db
+      - redis
+      - app
